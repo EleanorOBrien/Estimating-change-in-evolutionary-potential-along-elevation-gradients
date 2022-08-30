@@ -17,7 +17,7 @@ This file provides the full R code used to run linear mixed models analysing tra
 
 Data: "Paluma_Traits.csv"; "Danbulla_Traits.csv"
 
-These files contain data for all traits (cold tolerance, heat tolerance and wing size) and field fitness (survival and emergence) for each transect. Note that for cold tolerance, heat tolerance and wing size, there is one line per fly. Field fitness was measured at the level of the cage, therefore each line represents a transplant cage.  
+These files contain data for all traits (cold tolerance, heat tolerance and wing size) and field fitness (survival and emergence) for each gradient. Note that for cold tolerance, heat tolerance and wing size, there is one line per fly. Field fitness was measured at the level of the cage, therefore each line represents a transplant cage.  
 
 Columns in data files:
 ID			Individual identifier of each fly assayed for cold tolerance, heat tolerance or wing size
@@ -70,7 +70,10 @@ Dam			Individual identifier of the mother (dam) of each fly.  Corresponds with M
 Sire			Individual identifier of the father (sire) of each fly. Corresponds with Father column in trait files
 
 
-Model output: "mv.Pal"; "mv.Dan" 
+Model output: 
+"mv.Pal" Can be downloaded at: https://www.dropbox.com/s/nugenid4dlo99fh/mv.Pal?dl=0
+"mv.Dan" Can be downloaded at: https://www.dropbox.com/s/fn1xe2z0m4z3uyy/mv.Dan.Dan?dl=0
+
 These are R objects containing the results of the MCMCglmm models run for each gradient to estimate genetic and maternal effect variances and covariances. 
 These are provided because each model takes several hours to run so can't be replicated quickly. 
 Note that results differ slightly between replicate runs of the same model due to stochastic variation in the MCMC sampling.  
