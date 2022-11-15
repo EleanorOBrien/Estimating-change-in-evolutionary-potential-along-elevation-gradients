@@ -92,24 +92,26 @@ by_gradient <- group_by(Selection_response, Gradient)
 
 WS_sel_heritability <- do(by_gradient,
                           glance(
-                            lm(abs(S) ~ Field_H2, data = .)))
+                            lm(S ~ Field_H2, data = .)))
+                            
 
 WS_sel_heritability_coeffs <- do(by_gradient,
                                  tidy(
-                                   lm(abs(S) ~ Field_H2, data = .))) 
+                                   lm(S ~ Field_H2, data = .)))
+                                   
 
 #Plot this
 Selection_response$Gradient <- recode_factor(Selection_response$Gradient, Danbulla = "Mt Edith", Paluma = "Paluma")
 Selection_response_Danbulla$Gradient <- recode_factor(Selection_response_Danbulla$Gradient, Danbulla = "Mt Edith", Paluma = "Paluma")
 Selection_response_Paluma$Gradient <- recode_factor(Selection_response_Paluma$Gradient, Danbulla = "Mt Edith", Paluma = "Paluma")
 
-WS_sel_heritability_plot <- ggplot(data = Selection_response, aes(x = Field_H2, y = abs(S)))+
-  geom_errorbar(aes(x=Field_H2, ymin=abs(S)-SE_S, ymax=abs(S)+SE_S))+
-  geom_errorbarh(aes(y=abs(S), xmin=Field_H2-SE_H2, xmax=Field_H2+SE_H2))+
-  geom_point(aes(x=Field_H2, y=abs(S)), size = 3, colour = "black", fill = "black")+
+WS_sel_heritability_plot <- ggplot(data = Selection_response, aes(x = Field_H2, y = S))+
+  geom_errorbar(aes(x=Field_H2, ymin=S-SE_S, ymax=S+SE_S))+
+  geom_errorbarh(aes(y=S, xmin=Field_H2-SE_H2, xmax=Field_H2+SE_H2))+
+  geom_point(aes(x=Field_H2, y=S), size = 3, colour = "black", fill = "black")+
   facet_grid(cols=vars(Gradient))+
   coord_cartesian(xlim=c(0,1))+
-  geom_smooth(data = Selection_response_Danbulla, aes(x = Field_H2, y = abs(S)), method = "lm", colour="black", se=FALSE)+
+  geom_smooth(data = Selection_response_Danbulla, aes(x = Field_H2, y = S), method = "lm", colour="black", se=FALSE)+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line=element_line(colour="black"))+
   theme(axis.title.x = element_text(size = 16),
@@ -118,8 +120,12 @@ WS_sel_heritability_plot <- ggplot(data = Selection_response, aes(x = Field_H2, 
         axis.text.y = element_text(size = 14),
         strip.text.x = element_text(size = 16),
         legend.position = "none")+
-  xlab("Field "~H^2*" (SE)")+
-  ylab("Absolute value of S (SE)")
+  xlab(expression(paste("Field ", italic("H")^{"2"}, " (\u00B1 SE)")))+
+  ylab(expression(paste("Selection differential, ", italic("S"), " (\u00B1 SE)")))
+
+ggsave("Selection_heritability_plots.png", plot = WS_sel_heritability_plot, width = 30, height = 20, units = "cm", bg = "white")
+
+
 
 
 #Test for linear relationship between field predicted selection response (WS) and elevation at each gradient
@@ -173,7 +179,7 @@ Plot_WS_response <-Selection_response %>%
         strip.text.x = element_text(size = 16),
         legend.position = "none")+
   xlab("Elevation (m)")+
-  ylab("Predicted response (SE)")
+  ylab(expression(paste("Predicted response,  ", italic("R"), " (\u00B1 SE)")))
 
 
 #Plot elevation against absolute value of the selection response
@@ -204,6 +210,8 @@ Plot_abs_WS_response <-Selection_response %>%
         strip.text.x = element_blank(),
         legend.position = "none")+
   xlab("Elevation (m)")+
-  ylab("Absolute value of predicted response (SE)")
+  ylab(expression(paste("Absolute predicted response,  ", "|",italic("R"),"|", " (\u00B1 SE)")))
 
-ggarrange(Plot_WS_response, Plot_abs_WS_response, nrow = 2, ncol = 1, align="v")
+Elevation_selresponse_plots <- ggarrange(Plot_WS_response, Plot_abs_WS_response, nrow = 2, ncol = 1, align="v")
+
+ggsave("Elevation_selresponse.png", plot = Elevation_selresponse_plots, width = 25, height = 25, units = "cm", bg = "white")

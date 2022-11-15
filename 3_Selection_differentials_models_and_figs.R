@@ -17,22 +17,22 @@ Trait_fitness <- read.csv("Cage_data.csv", header = TRUE, sep = ',')
 
 Site_mean_emergence <- Trait_fitness %>%
   group_by(Site) %>%
-  summarise_at(vars(emergence), list(Site_mean_emergence = mean))
+  summarise_at(vars(Emergence), list(Site_mean_emergence = mean))
 
 
 Site_mean_survival <- Trait_fitness %>%
   group_by(Site) %>%
-  summarise_at(vars(survivors), list(Site_mean_survival = mean))
+  summarise_at(vars(Survivors), list(Site_mean_survival = mean))
 
 
 Gradient_mean_emergence <- Trait_fitness %>%
   group_by(Gradient) %>%
-  summarise_at(vars(emergence), list(Gradient_mean_emergence = mean))
+  summarise_at(vars(Emergence), list(Gradient_mean_emergence = mean))
 
 
 Gradient_mean_survival <- Trait_fitness %>%
   group_by(Gradient) %>%
-  summarise_at(vars(survivors), list(Gradient_mean_survival = mean))
+  summarise_at(vars(Survivors), list(Gradient_mean_survival = mean))
 
 
 Trait_fitness <- merge(Trait_fitness, Site_mean_emergence, by = "Site")
@@ -44,10 +44,10 @@ Trait_fitness <- merge(Trait_fitness, Gradient_mean_survival, by = "Gradient")
 #Calculate relative fitness (by emergence and survival) for each cage as fitness divided by site mean fitness
 #Do the same for gradient
 
-Trait_fitness$Rel_fitness_emergence <- Trait_fitness$emergence/Trait_fitness$Site_mean_emergence
-Trait_fitness$Rel_fitness_survival <- Trait_fitness$emergence/Trait_fitness$Site_mean_survival
-Trait_fitness$Rel_fitness_emergence_gradient <- Trait_fitness$emergence/Trait_fitness$Gradient_mean_emergence
-Trait_fitness$Rel_fitness_survival_gradient <- Trait_fitness$emergence/Trait_fitness$Gradient_mean_survival
+Trait_fitness$Rel_fitness_emergence <- Trait_fitness$Emergence/Trait_fitness$Site_mean_emergence
+Trait_fitness$Rel_fitness_survival <- Trait_fitness$Survivors/Trait_fitness$Site_mean_survival
+Trait_fitness$Rel_fitness_emergence_gradient <- Trait_fitness$Emergence/Trait_fitness$Gradient_mean_emergence
+Trait_fitness$Rel_fitness_survival_gradient <- Trait_fitness$Survivors/Trait_fitness$Gradient_mean_survival
 
 
 
@@ -338,7 +338,7 @@ Elevation_seldiff_plots <- Seldiff_effects %>%
   facet_grid(cols=vars(Trait), rows = vars(Gradient))+
   geom_smooth(data=CT_Seldiff_effects, aes(x=Elevation, y = estimate), method = "lm", se = FALSE, color = "black")+
   xlab("Elevation")+ 
-  ylab("Selection differential (SE)")+
+  ylab(expression(paste("Selection differential, ", italic("S"), " (\u00B1 SE)")))+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line=element_line(colour="black"))+
   theme(axis.title.x = element_text(size = 16),
@@ -348,6 +348,8 @@ Elevation_seldiff_plots <- Seldiff_effects %>%
         strip.text.x = element_text(size = 16),
         strip.text.y = element_text(size = 16),
         legend.position = "none")
+
+ggsave("Selection_differential_plots.png", plot = Elevation_seldiff_plots, width = 30, height = 20, units = "cm", bg = "white")
 
 #Write Seldiff_effects to file to use in estimating selection response
 #First rename 'estimate' as S

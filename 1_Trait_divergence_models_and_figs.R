@@ -28,9 +28,8 @@ Traits <- rbind(Paluma_traits, Danbulla_traits)
 #Ensure variable types are specified correctly
 Traits$Dam <- as.factor(Traits$Mother)
 Traits$Batch_CT <- as.factor(Traits$Batch_CT)
-Traits$Vial_CT <- as.factor(Traits$Vial_CT)
 Traits$Batch_HT <- as.factor(Traits$Batch_HT)
-Traits$Vial_HT <- as.factor(Traits$Vial_HT)
+
 
 #Cold tolerance
 
@@ -88,7 +87,7 @@ WS <- subset(Traits, Trait=="Wing_size")
 #Get wing size in mm
 WS$WingSize_mm <- WS$Centroid_Size*0.000861
 
-WS_model <- lmer(WingSize_mm ~ Transect*Altitude_origin + (1|Mother) + (1|Replicate_WS), data = WS, na.action = na.exclude)
+WS_model <- lmer(WingSize_mm ~ Transect*Altitude_origin + (1|Mother) + (1|Replicate), data = WS, na.action = na.exclude)
 
 summary(WS_model)
 WS.anova <- anova(WS_model)
@@ -98,7 +97,7 @@ WS.anova <- anova(WS_model)
 WS_emm <- ggemmeans(WS_model, terms=c("Transect", "Altitude_origin"))
 
 #Significance of random effects
-WS_model.a <- lmer(WingSize_mm ~ Transect*Altitude_origin + (1|Replicate_WS), data = WS, na.action = na.exclude)
+WS_model.a <- lmer(WingSize_mm ~ Transect*Altitude_origin + (1|Replicate), data = WS, na.action = na.exclude)
 
 anova(WS_model, WS_model.a)
 
@@ -139,7 +138,7 @@ CT_figure <- CT.1 %>%
         plot.title = element_text(face = "bold", size = 18),
         strip.text.x = element_text(size = 16),
         legend.position = "none")+
-  scale_color_manual(values=c("Low"="firebrick", "High"="blue4"))+
+  # scale_color_manual(values=c("Low"="firebrick", "High"="blue4"))+
   scale_fill_discrete(name = "Source elevation")+
   ggtitle("Cold tolerance")
 
@@ -179,7 +178,7 @@ HT_figure <- HT %>%
         plot.title = element_text(face = "bold", size = 18),
         strip.text.x = element_text(size = 16),
         legend.position = "none")+
-  scale_color_manual(values=c("Low"="firebrick", "High"="blue4"))+
+  # scale_color_manual(values=c("Low"="firebrick", "High"="blue4"))+
   scale_fill_discrete(name = "Source elevation")+
   ggtitle("Heat tolerance")
 
@@ -220,7 +219,7 @@ WS_figure <- WS %>%
         plot.title = element_text(face = "bold", size = 18),
         strip.text.x = element_text(size = 16),
         legend.position = "none")+
-  scale_color_manual(values=c("Low"="firebrick", "High"="blue4"))+
+  # scale_color_manual(values=c("Low"="firebrick", "High"="blue4"))+
   scale_fill_discrete(name = "Source elevation")+
   ggtitle("Wing size")
 
